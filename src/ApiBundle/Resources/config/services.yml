@@ -1,0 +1,5 @@
+services:
+    kernel.listener.json_response_listener :
+        class:     ApiBundle\Listener\ResponseListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.view, method: onKernelView }
