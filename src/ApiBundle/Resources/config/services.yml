@@ -1,5 +1,21 @@
 services:
+    # Listeners
     kernel.listener.json_response_listener :
-        class:     ApiBundle\Listener\ResponseListener
+        class: ApiBundle\Listener\ResponseListener
         tags:
             - { name: kernel.event_listener, event: kernel.view, method: onKernelView }
+
+    kernel.listener.consumer_authentication_listener :
+        class: ApiBundle\Listener\ConsumerAuthenticationListener
+        arguments: ['@apibundle.service.consumer_service', '@kernel.listener.exception_listener']
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    kernel.listener.exception_listener:
+        class: ApiBundle\Listener\ExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    # Services
+    apibundle.service.consumer_service:
+        class: ApiBundle\Service\ConsumerService
