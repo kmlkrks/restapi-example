@@ -61,6 +61,22 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
 
+doctrine_cache:
+    aliases:
+        cache: "%cache_provider%"
+    providers:
+        redis_cache:
+            namespace: "%redis_cache_keyspace%"
+            redis:
+                host: "%redis_cache_host%"
+                port: "%redis_cache_port%"
+        redis_session:
+            namespace: "%redis_session_keyspace%"
+            redis:
+                host: "%redis_session_host%"
+                port: "%redis_session_port%"
+
+
 # Swiftmailer Configuration
 swiftmailer:
     transport: "%mailer_transport%"
