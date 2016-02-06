@@ -1,4 +1,6 @@
 services:
+    cache:
+        class: Doctrine\Common\Cache\ArrayCache
     # Listeners
     kernel.listener.json_response_listener :
         class: ApiBundle\Listener\ResponseListener
@@ -16,6 +18,30 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
+    # Security
+    apibundle.security.access_token_user_provider:
+        class: ApiBundle\Security\AccessTokenUserProvider
+        arguments: ['@apibundle.service.access_token_service', '@apibundle.service.user_service']
+
+    apibundle.security.access_token_authenticator:
+        class:  ApiBundle\Security\AccessTokenAuthenticator
+        public: false
+
     # Services
     apibundle.service.consumer_service:
         class: ApiBundle\Service\ConsumerService
+
+    apibundle.service.access_token_service:
+        class: ApiBundle\Service\AccessTokenService
+        arguments: ['@doctrine_cache.providers.redis_session']
+
+    apibundle.service.user_service:
+        class: ApiBundle\Service\UserService
+        arguments: ['@security.encoder_factory', '@doctrine.orm.default_entity_manager', '@apibundle.repository.user_repository']
+
+    # Repositories
+    apibundle.repository.user_repository:
+        class: ApiBundle\Repository\UserRepository
+        factory_service: doctrine.orm.default_entity_manager
+        factory_method: getRepository
+        arguments: ['@doctrine.orm.default_entity_manager']

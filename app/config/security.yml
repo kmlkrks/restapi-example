@@ -1,24 +1,17 @@
-# To get started with security, check out the documentation:
-# http://symfony.com/doc/current/book/security.html
 security:
-
-    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
-    providers:
-        in_memory:
-            memory: ~
-
+    encoders:
+        ApiBundle\Entity\User:
+            algorithm: md5
+            iterations: 1
+            encode_as_base64: false
     firewalls:
-        # disables authentication for assets and the profiler, adapt it according to your needs
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+        secured_area:
+            pattern: ^/
+            stateless: true
+            anonymous: true
+            simple_preauth:
+                authenticator: apibundle.security.access_token_authenticator
 
-        main:
-            anonymous: ~
-            # activate different ways to authenticate
-
-            # http_basic: ~
-            # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: ~
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+    providers:
+        access_token:
+            id: apibundle.security.access_token_user_provider
