@@ -34,4 +34,17 @@ class UserRepository extends EntityRepository
             ->setParameter('username', $username)
             ->getOneOrNullResult();
     }
+
+    /**
+     * @param $id
+     * @param int $hydrateMode
+     * @return mixed
+     */
+    public function findOneById($id, $hydrateMode = Query::HYDRATE_ARRAY)
+    {
+        return $this->getEntityManager()
+            ->createQuery("SELECT u FROM ApiBundle:User u WHERE u.id = :id")
+            ->setParameter('id', $id)
+            ->getOneOrNullResult($hydrateMode);
+    }
 }
