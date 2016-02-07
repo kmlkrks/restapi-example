@@ -104,4 +104,51 @@ class UserService
 
         return false;
     }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getUserById($id)
+    {
+        return $this->userRepository->findOneById($id);
+    }
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function deleteUserById($id)
+    {
+        $user = $this->userRepository->find($id);
+        if (!$user) {
+            return false;
+        }
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+        return true;
+    }
+
+    /**
+     * @param $id
+     * @param $username
+     * @return DBALException|\Exception|null|object
+     */
+    public function updateUser($id, $username)
+    {
+        $this->entityManager->beginTransaction();
+        try {
+            $user = $this->userRepository->find($id);
+            $user->setUsername($username);
+            $user->setEmail($username);
+
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+            return $user;
+        } catch (DBALException $e) {
+            $this->entityManager->rollback();
+            return $e;
+        }
+    }
 } 
