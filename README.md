@@ -11,7 +11,7 @@ Example rest api project with symfony 3
 ####Installation
 Clone repository from git
 
-	git clone git@dev.tasit.com:tasit-rest-api.git
+	https://github.com/kmlkrks/restapi-example.git
 
 Install composer
 
